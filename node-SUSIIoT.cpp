@@ -47,8 +47,14 @@ NAN_METHOD(getData) {
 	{
 		NanReturnValue(NanNew<v8::String>("SusiIoTGetPFCapabilityString() failed."));
 	}
-
-	v8::Local<v8::String> dataStr = v8::String::New(buffer);
+	//In Node v0.10, you write: 
+	//v8::Local<v8::String> dataStr = v8::String::New(buffer);
+	//In Node v0.12, you write:
+	//v8::Isolate* isolate = v8::Isolate::GetCurrent();;
+	//v8::Local<v8::String> dataStr = v8::String::NewFromUtf8(isolate, buffer);
+	//Use Nan support
+	v8::Local<v8::String> dataStr = NanNew<v8::String>(buffer);
+	
     SusiIoTMemFree((void *)buffer);
 
     NanReturnValue(dataStr);
