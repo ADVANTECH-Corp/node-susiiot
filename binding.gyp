@@ -1,19 +1,20 @@
 {
   'targets': [
     {
-      'target_name': 'node-SUSIIoT',
+      'target_name': '<(module_name)',
       'include_dirs' : [
-  	"<!(node -e \"require('nan')\")"
-			],
-      'conditions': [ 
-        ['OS=="linux"', {
-              'sources': [ 'node-SUSIIoT.cpp',  'node-SUSIIoT-function-define.cpp'],
-              'libraries': [ '-lSusiIoT' ],
-        }],
+  	    "<!(node -e \"require('nan')\")"
+      ],
+      'sources': [ 'node-SUSIIoT.cpp',  'node-SUSIIoT-function-define.cpp'],
+      'conditions': [
+        [
+          'OS=="linux"', {
+              'libraries': [ '-lSusiIoT' ]
+          }
+        ],
         [
           'OS=="win"',
           {
-            'sources': [ 'node-SUSIIoT.cpp',  'node-SUSIIoT-function-define.cpp'],
             'libraries':[
               'SusiIoT.lib'
             ],
@@ -37,6 +38,18 @@
             ]
           }
         ]
+      ]
+    },
+
+    {
+      "target_name": "action_after_build",
+      "type": "none",
+      "dependencies": [ "<(module_name)" ],
+      "copies": [
+        {
+          "files": [ "<(PRODUCT_DIR)\\<(module_name).node" ],
+          "destination": "<(module_path)"
+        }
       ]
     }
   ]
