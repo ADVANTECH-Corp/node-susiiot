@@ -10,16 +10,11 @@ using v8::String;
 // NativeExtension.cc represents the top level of the module. 
 // C++ constructs that are exposed to javascript are exported here
 
-void InitAll(Handle<Object> exports) {
-  exports->Set(NanNew<String>("getCapability"),
-    NanNew<FunctionTemplate>(getCapability)->GetFunction());
-  exports->Set(NanNew<String>("getData"),
-    NanNew<FunctionTemplate>(getData)->GetFunction());
-  exports->Set(NanNew<String>("setData"),
-    NanNew<FunctionTemplate>(setData)->GetFunction());
-  exports->Set(NanNew<String>("aString"),
-    NanNew<FunctionTemplate>(aString)->GetFunction());
-
+NAN_MODULE_INIT(Init) {
+	NAN_EXPORT(target, getCapability);
+	NAN_EXPORT(target, getData);
+	NAN_EXPORT(target, setData);
+	NAN_EXPORT(target, aString);
 }
 
-NODE_MODULE(node_SUSIIoT, InitAll)
+NODE_MODULE(node_SUSI, Init)

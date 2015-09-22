@@ -4,48 +4,46 @@
 
 static SusiIoTStatus_t status = SUSIIOT_STATUS_NOT_INITIALIZED;
 NAN_METHOD(getCapability) {
-    NanScope();
-
+    Nan::HandleScope scope;
 	if (status != SUSIIOT_STATUS_SUCCESS)
 	{
 		if((status = SusiIoTInitialize()) != SUSIIOT_STATUS_SUCCESS)
 		{
-			NanReturnValue(NanNew<v8::String>("SusiIoTInitialize() failed."));
+			info.GetReturnValue().Set(Nan::New<v8::String>("SusiLibInitialize() failed").ToLocalChecked());
 		}
 	}
 
 	char * buffer = SusiIoTGetPFCapabilityString();
 	if (buffer == (void *)0)
 	{
-		NanReturnValue(NanNew<v8::String>("SusiIoTGetPFCapabilityString() failed."));
+		info.GetReturnValue().Set(Nan::New<v8::String>("SusiIoTGetPFCapabilityString() failed.").ToLocalChecked());
 	}
 	
-	v8::Local<v8::String> capabilityStr = NanNew<v8::String>(buffer);
+	v8::Local<v8::String> capabilityStr = Nan::New<v8::String>(buffer).ToLocalChecked();
 	//NanUtf8String *capabilityStr = new NanUtf8String(buffer);
     SusiIoTMemFree((void *)buffer);
 
-    NanReturnValue(capabilityStr);
+    info.GetReturnValue().Set(capabilityStr);
 }
 
 NAN_METHOD(getData) {
-    NanScope();
-
+    Nan::HandleScope scope;
 	if (status != SUSIIOT_STATUS_SUCCESS)
 	{
 		if((status = SusiIoTInitialize()) != SUSIIOT_STATUS_SUCCESS)
 		{
-			NanReturnValue(NanNew<v8::String>("SusiIoTInitialize() failed."));
+			info.GetReturnValue().Set(Nan::New<v8::String>("SusiLibInitialize() failed").ToLocalChecked());
 		}
 	}
 	
 	uint32_t offset = 0;
-	if (args.Length() == 1)
-		offset = args[0]->Uint32Value();
+	if (info.Length() == 1)
+		offset = info[0]->Uint32Value();
 
 	char * buffer = SusiIoTGetPFDataString(offset);
 	if (buffer == (void *)0)
 	{
-		NanReturnValue(NanNew<v8::String>("SusiIoTGetPFCapabilityString() failed."));
+		info.GetReturnValue().Set(Nan::New<v8::String>("SusiIoTGetPFCapabilityString() failed.").ToLocalChecked());
 	}
 	//In Node v0.10, you write: 
 	//v8::Local<v8::String> dataStr = v8::String::New(buffer);
@@ -53,39 +51,39 @@ NAN_METHOD(getData) {
 	//v8::Isolate* isolate = v8::Isolate::GetCurrent();;
 	//v8::Local<v8::String> dataStr = v8::String::NewFromUtf8(isolate, buffer);
 	//Use Nan support
-	v8::Local<v8::String> dataStr = NanNew<v8::String>(buffer);
+	v8::Local<v8::String> dataStr = Nan::New<v8::String>(buffer).ToLocalChecked();
 	
     SusiIoTMemFree((void *)buffer);
 
-    NanReturnValue(dataStr);
+    info.GetReturnValue().Set(dataStr);
 }
 
 
 NAN_METHOD(setData) {
-    NanScope();
+    Nan::HandleScope scope;
 
 	if (status != SUSIIOT_STATUS_SUCCESS)
 	{
 		if((status = SusiIoTInitialize()) != SUSIIOT_STATUS_SUCCESS)
 		{
-			NanReturnValue(NanNew<v8::String>("SusiIoTInitialize() failed."));
+			info.GetReturnValue().Set(Nan::New<v8::String>("SusiLibInitialize() failed").ToLocalChecked());
 		}
 	}
 	
-	if (args.Length() < 1)
-		NanReturnValue(NanNew<v8::String>("SusiIoT: No IoT parameter!"));
+	if (info.Length() < 1)
+		info.GetReturnValue().Set(Nan::New<v8::String>("SusiIoT: No IoT parameter!").ToLocalChecked());
 	
-	NanUtf8String baz(args[0]);
+	v8::String::Utf8Value baz(info[0]);
 	if (SusiIoTSetPFDataString(*baz) != SUSIIOT_STATUS_SUCCESS)
 	{
-		NanReturnValue(NanNew<v8::String>("SusiIoTSetPFDataString() failed."));
+		info.GetReturnValue().Set(Nan::New<v8::String>("SusiIoTSetPFDataString() failed.").ToLocalChecked());
 	}
 
-    NanReturnValue(NanNew<v8::String>("SusiIoTSetPFDataString() Successful."));
+    info.GetReturnValue().Set(Nan::New<v8::String>("SusiIoTSetPFDataString() Successful.").ToLocalChecked());
 }
 
 NAN_METHOD(aString) {
-    NanScope();
-    NanReturnValue(NanNew<v8::String>("This is a thing."));
+    Nan::HandleScope scope;
+    info.GetReturnValue().Set(Nan::New<v8::String>("This is a thing.").ToLocalChecked());
 }
 
