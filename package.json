@@ -35,6 +35,7 @@
     "ADVANTECH",
     "SUSIIoT",
     "SUSI",
-    "API"
+    "API",
+	"node-red"
   ]
 }
